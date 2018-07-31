@@ -55,6 +55,15 @@ const events = [
   }
 ];
 
+const emptyEvent = {
+  title: "",
+  date: "",
+  city: "",
+  venue: "",
+  hostedBy: "",
+  id: null
+};
+
 class EventDashboard extends Component {
   state = {
     events,
@@ -86,11 +95,11 @@ class EventDashboard extends Component {
   };
 
   handleCreateEvent = newEvent => {
-    console.log(newEvent)
     newEvent.id = cuid();
     newEvent.hostPhotoURL = "/assets/user.png";
     const updatedEvents = [...this.state.events, newEvent];
     this.setState({ events: updatedEvents, isOpen: false });
+    this.handleOpen(emptyEvent);
   };
 
   handleDeleteEvent = eventId => () => {
