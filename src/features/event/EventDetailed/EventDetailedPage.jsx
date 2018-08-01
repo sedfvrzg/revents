@@ -6,19 +6,27 @@ import EventDetailedInfo from "./EventDetailedInfo";
 import EventDetailedSidebar from "./EventDetailedSidebar";
 import { connect } from "react-redux";
 
-const EventDetailedPage = ({event}) => {
-  return (
-    <Grid>
-      <Grid.Column width={10}>
-        <EventDetailedHeader event={event} />
-        <EventDetailedInfo event={event} />
-        <EventDetailedChat />
-      </Grid.Column>
-      <Grid.Column width={6}>
-        <EventDetailedSidebar attendees={event.attendees} />
-      </Grid.Column>
-    </Grid>
-  );
+const EventDetailedPage = ({ event }) => {
+  if (!event) {
+    return(
+      <div>
+        <h1>Event not found</h1>
+      </div>
+    )
+  } else {
+    return (
+      <Grid>
+        <Grid.Column width={10}>
+          <EventDetailedHeader event={event} />
+          <EventDetailedInfo event={event} />
+          <EventDetailedChat />
+        </Grid.Column>
+        <Grid.Column width={6}>
+          <EventDetailedSidebar attendees={event.attendees} />
+        </Grid.Column>
+      </Grid>
+    );
+  }
 };
 
 const mapStateToProps = (state, ownProps) => {
