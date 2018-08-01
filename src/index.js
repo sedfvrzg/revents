@@ -9,11 +9,11 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "./app/store/configureStore";
 import ScrollToTop from "./app/common/util/ScrollToTop";
-import { loadEvents } from "./features/event/eventActions";
+
 import "react-redux-toastr/lib/css/react-redux-toastr.min.css";
 
 const store = configureStore();
-store.dispatch(loadEvents());
+
 const rootElement = document.getElementById("root");
 
 let render = () => {

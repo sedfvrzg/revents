@@ -39,7 +39,7 @@ class EventDetailedInfo extends Component {
               <Icon name="calendar" size="large" color="teal" />
             </Grid.Column>
             <Grid.Column width={15}>
-              <span>{format(event.date, "dddd Do MMM")} at {format(event.date, 'h:mm A')}</span>
+              <span>{format(event.date.toDate(), "dddd Do MMM")} at {format(event.date.toDate(), 'h:mm A')}</span>
             </Grid.Column>
           </Grid>
         </Segment>
