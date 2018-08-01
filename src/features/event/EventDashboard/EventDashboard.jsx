@@ -17,7 +17,8 @@ class EventDashboard extends Component {
   };
 
   render() {
-    const { events, loading } = this.props;
+    const { events, loading, auth } = this.props;
+    if(auth) console.log(auth);
     if (loading) return <LoadingComponent inverted={true} />;
     return (
       <Grid>

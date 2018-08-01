@@ -40,6 +40,9 @@ if (module.hot) {
   });
 }
 
-render();
+//wait for auth to load before rendering
+store.firebaseAuthIsReady.then(() => {
+  render();
+})
 
 registerServiceWorker();
