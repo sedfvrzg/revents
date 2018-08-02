@@ -61,3 +61,4 @@ export default connect(
   mapStateToProps,
   dispatchActions
 )(SettingsDashboard);
+
