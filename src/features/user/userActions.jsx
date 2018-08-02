@@ -45,9 +45,6 @@ export const uploadProfileImage = (file, fileName) => async (
     let uploadedFile = await firebase.uploadFile(path, file, null, options);
     let downloadURL = await uploadedFile.uploadTaskSnapshot.ref.getDownloadURL();
     let userDoc = await firestore.get(`users/${user.uid}`);
-    console.log(downloadURL);
-    console.log(userDoc);
-    console.log(uploadedFile);
 
     if (!userDoc.data().photoURL) {
       await firebase.updateProfile({

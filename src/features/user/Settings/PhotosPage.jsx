@@ -12,7 +12,7 @@ import {
 import { connect } from "react-redux";
 import { uploadProfileImage, deletePhoto, setMainPhoto } from "../userActions";
 import { toastr } from "react-redux-toastr";
-import { firebaseconnect, firestoreConnect } from "react-redux-firebase";
+import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import Dropzone from "react-dropzone";
 import Cropper from "react-cropper";
