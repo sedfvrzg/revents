@@ -1,26 +1,31 @@
-import React, { Component } from "react";
-import { Segment, Grid, Icon, Button } from "semantic-ui-react";
-import EventDetailedMap from "./EventDetailedMap";
-import format from "date-fns/format";
+import React, { Component } from 'react';
+import { Segment, Grid, Icon, Button } from 'semantic-ui-react';
+import EventDetailedMap from './EventDetailedMap'
+import format from 'date-fns/format'
 
 class EventDetailedInfo extends Component {
   state = {
     showMap: false
-  };
+  }
+
+  componentWillUnmount() {
+    this.setState({
+      showMap: false
+    })
+  }
 
   showMapToggle = () => {
     this.setState(prevState => ({
       showMap: !prevState.showMap
-    }));
-  };
-
-  componentWillUnmount = () => {
-    this.setState({showMap: false})
+    }))
   }
-  
 
   render() {
     const { event } = this.props;
+    let eventDate;
+    if (event.date) {
+      eventDate = new Date(event.date * 1000);
+    }
     return (
       <Segment.Group>
         <Segment attached="top">
@@ -39,7 +44,7 @@ class EventDetailedInfo extends Component {
               <Icon name="calendar" size="large" color="teal" />
             </Grid.Column>
             <Grid.Column width={15}>
-              <span>{format(event.date.toDate(), "dddd Do MMM")} at {format(event.date.toDate(), 'h:mm A')}</span>
+              <span>{format(eventDate, 'dddd Do MMM')} at {format(eventDate, 'h:mm A')}</span>
             </Grid.Column>
           </Grid>
         </Segment>
@@ -52,21 +57,12 @@ class EventDetailedInfo extends Component {
               <span>{event.venue}</span>
             </Grid.Column>
             <Grid.Column width={4}>
-              <Button
-                onClick={this.showMapToggle}
-                color="teal"
-                size="tiny"
-                content={this.state.showMap ? "Hide Map" : "Show Map"}
-              />
+              <Button onClick={this.showMapToggle} color="teal" size="tiny" content={this.state.showMap ? 'Hide Map' : 'Show Map'}/>
             </Grid.Column>
           </Grid>
         </Segment>
-        {this.state.showMap && (
-          <EventDetailedMap
-            lat={event.venueLatLng.lat}
-            lng={event.venueLatLng.lng}
-          />
-        )}
+        {this.state.showMap &&
+        <EventDetailedMap lat={event.venueLatLng.lat} lng={event.venueLatLng.lng}/>}
       </Segment.Group>
     );
   }

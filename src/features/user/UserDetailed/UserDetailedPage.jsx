@@ -1,17 +1,23 @@
 import React, { Component } from "react";
-import { Grid} from "semantic-ui-react";
+import { Grid } from "semantic-ui-react";
 import UserDetailedHeader from "./UserDetailedHeader";
 import UserDetailedAbout from "./UserDetailedAbout";
 import UserDetailedPhotos from "./UserDetailedPhotos";
 import UserDetailedEvents from "./UserDetailedEvents";
-import UserDetailedSidebar from './UserDetailedSidebar'
+import UserDetailedSidebar from "./UserDetailedSidebar";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { firestoreConnect } from "react-redux-firebase";
+import { firestoreConnect, isEmpty } from "react-redux-firebase";
+import { userDetailedQuery } from "../userQueries";
+import LoadingComponent from '../../../app/layout/LoadingComponent'
 
 class UserDetailedPage extends Component {
   render() {
-    const { photos, profile } = this.props
+    const { photos, profile, auth, match, requesting } = this.props;
+    const isCurrentUser = auth.uid === match.params.id;
+    const loading = Object.values(requesting).some(a => a === true);
+
+    if(loading) return <LoadingComponent inverted={true} />
     return (
       <Grid>
         <Grid.Column width={16}>
@@ -21,12 +27,12 @@ class UserDetailedPage extends Component {
           <UserDetailedAbout profile={profile} />
         </Grid.Column>
         <Grid.Column width={4}>
-        <UserDetailedSidebar/>
+          <UserDetailedSidebar isCurrentUser={isCurrentUser} />
         </Grid.Column>
 
         <Grid.Column width={12}>
-        {photos && photos.length > 0 &&
-          <UserDetailedPhotos photos={photos} />}
+          {photos &&
+            photos.length > 0 && <UserDetailedPhotos photos={photos} />}
         </Grid.Column>
 
         <Grid.Column width={12}>
@@ -37,22 +43,27 @@ class UserDetailedPage extends Component {
   }
 }
 
-const query = ({ auth }) => {
-  return [
-    {
-      collection: "users",
-      doc: auth.uid,
-      subcollections: [{ collection: "photos" }],
-      storeAs: "photos"
-    }
-  ];
-};
+const mapStateToProps = (state, ownProps) => {
+  let userUid = null;
+  let profile = {};
 
-const mapStateToProps = state => ({
-  auth: state.firebase.auth,
-  profile: state.firebase.profile,
-  photos: state.firestore.ordered.photos
-});
+  if (ownProps.match.params.id === state.auth.id) {
+    profile = state.firebase.profile;
+  } else {
+    profile =
+      !isEmpty(state.firestore.ordered.profile) &&
+      state.firestore.ordered.profile[0];
+    userUid = ownProps.match.params.id;
+  }
+
+  return {
+    auth: state.firebase.auth,
+    profile,
+    userUid,
+    photos: state.firestore.ordered.photos,
+    requesting: state.firestore.status.requesting
+  };
+};
 
 const mapDispatchToProps = {};
 
@@ -61,5 +72,5 @@ export default compose(
     mapStateToProps,
     mapDispatchToProps
   ),
-  firestoreConnect(auth => query(auth))
+  firestoreConnect((auth, userUid) => userDetailedQuery(auth, userUid))
 )(UserDetailedPage);
